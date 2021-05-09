@@ -1,0 +1,7 @@
+Races#index
+
+<% @races.each do |race| %>
+  <div>
+    <%= link_to race.name, race_path(race) %>
+  </div>
+<% end %>

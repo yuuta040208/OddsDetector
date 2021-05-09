@@ -1,0 +1,13 @@
+Races#show
+
+<div>
+  <%= @race.name %>
+</div>
+
+<div>
+  <% @horses.each do |horse| %>
+    <div>
+      <%= horse.name %>
+    </div>
+  <% end %>
+</div>
