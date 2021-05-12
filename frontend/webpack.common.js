@@ -7,7 +7,7 @@ const targetBrowsers = "last 2 version, >0.25% in JP, ie >= 11, not op_mini all"
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const entries = {};
 const srcDir = "./src/";
@@ -69,17 +69,18 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              ident: 'postcss',
-              plugins: () => [
-                autoprefixer({
-                  grid: true,
-                  overrideBrowserslist: [
-                    targetBrowsers
-                  ]
-                }),
-                require('postcss-flexbugs-fixes')(),
-                require('css-mqpacker')()
-              ]
+              postcssOptions: {
+                plugins: () => [
+                  autoprefixer({
+                    grid: true,
+                    overrideBrowserslist: [
+                      targetBrowsers
+                    ]
+                  }),
+                  require('postcss-flexbugs-fixes')(),
+                  require('css-mqpacker')()
+                ]
+              }
             }
           },
           'resolve-url-loader',
@@ -128,11 +129,10 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name]-[hash].css",
-      allChunks: false
+      filename: "[name]-[hash].css"
     }),
     new WebpackAssetsManifest({
-      fileName: "manifest.json",
+      output: "manifest.json",
       publicPath: module.parent.exports.AppNamePath + '/bundles/',
     }),
     new CleanWebpackPlugin(),
@@ -140,14 +140,5 @@ module.exports = {
       $: "jquery",
       jQuery: "jquery"
     })
-  ],
-  optimization: {
-    splitChunks: {
-      name: 'js/vendor',
-      chunks: 'initial',
-    },
-    runtimeChunk: {
-      name: 'js/runtime'
-    }
-  }
+  ]
 };

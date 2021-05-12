@@ -1,0 +1,50 @@
+{
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jquery": true
+  },
+  "globals": {
+    "lazyload": false
+  },
+  "rules": {
+    "no-restricted-syntax": ["error", "TSEnumDeclaration"], // 禁止構文 enumの禁止
+    "react/prop-types": 0, // 型検査はtypescriptで対応しているため
+    "react-hooks/exhaustive-deps": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "@typescript-eslint/explicit-member-accessibility": "off", // メンバのアクセス修飾子(pubic, privateなど)を必須にする
+    "@typescript-eslint/interface-name-prefix": "off", //interfaceの名前に必ずIのprefixをつける
+    "@typescript-eslint/explicit-function-return-type": "off", // functionの返値の型指定を必須にする
+    "@typescript-eslint/prefer-interface": "off", // interfaceではなくtypeを優先して使う
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "no-unused-expressions": "off", // optional chaining対応
+    "@typescript-eslint/consistent-type-assertions": [ // <Type>のアサーションの代わりに as Type を使う
+      "warn",
+      {
+        "assertionStyle": "as",
+        "objectLiteralTypeAssertions": "allow-as-parameter"
+      }
+    ]
+  },
+  "settings": {
+    "node": {
+      "tryExtensions": [".ts", ".js", ".vue", ".json"]
+    }
+  }
+}
