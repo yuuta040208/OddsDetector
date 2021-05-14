@@ -14,7 +14,8 @@ class Api::V1::RacesController < Api::ApplicationController
   end
 
   def odds_win
-    @race_cards = Race.find(params[:id]).race_cards.preload(:wins).order(:horse_number)
+    @race_cards = Race.find(params[:id]).race_cards.eager_load(:wins).order(:horse_number, crawled_at: :desc)
+    @crawled_ats = @race_cards.pluck(:crawled_at).uniq.map { |time| time + 9.hours }
   end
 
   def odds_place

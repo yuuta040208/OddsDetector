@@ -25,8 +25,7 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
     t.bigint "race_card_id"
     t.float "odds_min", null: false, comment: "複勝オッズ（下限）"
     t.float "odds_max", null: false, comment: "複勝オッズ（上限）"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "crawled_at", null: false, comment: "クローリングした日時"
     t.index ["race_card_id"], name: "index_places_on_race_card_id"
   end
 
@@ -34,8 +33,7 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
     t.bigint "first_race_card_id"
     t.bigint "second_race_card_id"
     t.float "odds", null: false, comment: "馬連オッズ"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "crawled_at", null: false, comment: "クローリングした日時"
     t.index ["first_race_card_id"], name: "index_quinellas_on_first_race_card_id"
     t.index ["second_race_card_id"], name: "index_quinellas_on_second_race_card_id"
   end
@@ -75,8 +73,7 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
     t.bigint "second_race_card_id"
     t.float "odds_min", null: false, comment: "ワイドオッズ（下限）"
     t.float "odds_max", null: false, comment: "ワイドオッズ（上限）"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "crawled_at", null: false, comment: "クローリングした日時"
     t.index ["first_race_card_id"], name: "index_wides_on_first_race_card_id"
     t.index ["second_race_card_id"], name: "index_wides_on_second_race_card_id"
   end
@@ -84,8 +81,7 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
   create_table "wins", force: :cascade do |t|
     t.bigint "race_card_id"
     t.float "odds", null: false, comment: "単勝オッズ"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "crawled_at", null: false, comment: "クローリングした日時"
     t.index ["race_card_id"], name: "index_wins_on_race_card_id"
   end
 

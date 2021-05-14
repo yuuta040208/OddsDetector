@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :races, only: [:index, :show]
 
-  namespace :api do
+  namespace :api, format: :json do
     namespace :v1 do
       resources :races, only: [:index, :show] do
         member do

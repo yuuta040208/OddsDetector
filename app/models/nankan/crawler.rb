@@ -20,16 +20,21 @@ class Nankan::Crawler
       end
     end
 
-    def odds
+    def publish
+      Nankan::Publisher.new(Time.parse('2021-05-14 17:50:00')).execute
+    end
+
+    def subscribe
+      crawled_at = Time.current
       delayed_each(Nankan::Subscriber.new.execute) do |scraping_target|
         url = File.join(HOST, scraping_target.url)
         document = Nokogiri::HTML(open(url))
         race_card = scraping_target.race_card
 
-        Nankan::Odds::Win.parse(document, race_card.id).save!
-        Nankan::Odds::Place.parse(document, race_card.id).save!
-        Nankan::Odds::Quinella.parse(document, race_card.race_id).each(&:save!)
-        Nankan::Odds::Wide.parse(document, race_card.race_id).each(&:save!)
+        Nankan::Odds::Win.parse(document, race_card.id, crawled_at).save!
+        Nankan::Odds::Place.parse(document, race_card.id, crawled_at).save!
+        Nankan::Odds::Quinella.parse(document, race_card.race_id, crawled_at).each(&:save!)
+        Nankan::Odds::Wide.parse(document, race_card.race_id, crawled_at).each(&:save!)
       end
     end
 

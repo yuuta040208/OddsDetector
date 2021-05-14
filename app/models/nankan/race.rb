@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Nankan::Race
+  extend Trimmable
+
   def initialize(id:, name:, number:, course:, hold_at:, start_at:, description:)
     @id = id
     @name = name
@@ -20,7 +22,7 @@ class Nankan::Race
   def self.parse(document, url, date)
     new(
       id: url.split('/').last.to_i.to_s[0..-3],
-      name: document.css('#race-data01-b > h3 > span').text.strip,
+      name: trim(document.css('#race-data01-b > h3 > span').text.strip),
       number: document.css('#race-data01-b > p.bl-left.mR5.pT3 > img').first.attributes['alt'].value.to_i,
       course: document.css('#race-data01-a > a').text.strip,
       hold_at: date,

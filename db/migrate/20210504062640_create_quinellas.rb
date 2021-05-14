@@ -4,8 +4,7 @@ class CreateQuinellas < ActiveRecord::Migration[6.0]
       t.references :first_race_card
       t.references :second_race_card
       t.float :odds, null: false, comment: '馬連オッズ'
-
-      t.timestamps
+      t.datetime :crawled_at, null: false, comment: 'クローリングした日時'
     end
 
     add_foreign_key :quinellas, :race_cards, column: :first_race_card_id

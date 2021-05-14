@@ -5,8 +5,7 @@ class CreateWides < ActiveRecord::Migration[6.0]
       t.references :second_race_card
       t.float :odds_min, null: false, comment: 'ワイドオッズ（下限）'
       t.float :odds_max, null: false, comment: 'ワイドオッズ（上限）'
-
-      t.timestamps
+      t.datetime :crawled_at, null: false, comment: 'クローリングした日時'
     end
 
     add_foreign_key :wides, :race_cards, column: :first_race_card_id
