@@ -14,8 +14,13 @@ class Api::V1::RacesController < Api::ApplicationController
   end
 
   def odds_win
-    @race_cards = Race.find(params[:id]).race_cards.eager_load(:wins).order(:horse_number, crawled_at: :desc)
-    @crawled_ats = @race_cards.pluck(:crawled_at).uniq.map { |time| time + 9.hours }
+    @data = Win.eager_load(race_card: :horse).where(race_cards: { race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, wins|
+      hash = { crawled_at: crawled_at }
+      hash[:horses] = wins.map do |win|
+        { number: win.race_card.horse_number, name: win.race_card.horse_name, odds: win.odds }
+      end
+      hash
+    end
   end
 
   def odds_place
