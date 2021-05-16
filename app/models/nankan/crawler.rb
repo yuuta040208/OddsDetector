@@ -21,7 +21,7 @@ class Nankan::Crawler
     end
 
     def publish
-      Nankan::Publisher.new(Time.parse('2021-05-14 17:50:00')).execute
+      Nankan::Publisher.new.execute
     end
 
     def subscribe

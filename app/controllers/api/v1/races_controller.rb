@@ -10,7 +10,7 @@ class Api::V1::RacesController < Api::ApplicationController
   end
 
   def horses
-    @race_cards = Race.find(params[:id]).race_cards
+    @race_cards = Race.find(params[:id]).race_cards.preload(:horse)
   end
 
   def odds_win
@@ -24,6 +24,12 @@ class Api::V1::RacesController < Api::ApplicationController
   end
 
   def odds_place
-    @race_cards = Race.find(params[:id]).race_cards.preload(:places).order(:horse_number)
+    @data = Place.eager_load(race_card: :horse).where(race_cards: { race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, places|
+      hash = { crawled_at: crawled_at }
+      hash[:horses] = places.map do |place|
+        { number: place.race_card.horse_number, name: place.race_card.horse_name, odds: place.odds }
+      end
+      hash
+    end
   end
 end

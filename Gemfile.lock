@@ -167,6 +167,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    timers (4.3.3)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     web-console (4.1.0)
@@ -201,6 +202,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
+  timers
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
