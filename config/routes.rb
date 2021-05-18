@@ -10,8 +10,10 @@ Rails.application.routes.draw do
           get :horses
 
           scope :odds do
-            get :win, to: 'races#odds_win'
-            get :place, to: 'races#odds_place'
+            get '/win', to: 'races#odds_win'
+            get '/place', to: 'races#odds_place'
+            get '/quinella/:horse_number', to: 'races#odds_quinella'
+            get '/wide/:horse_number', to: 'races#odds_wide'
           end
         end
       end

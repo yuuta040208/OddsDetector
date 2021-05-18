@@ -3,6 +3,8 @@ import {get} from "./_apiClient";
 const API_PATH = "/api/v1/races";
 const ODDS_WIN_ENDPOINT = "odds/win/";
 const ODDS_PLACE_ENDPOINT = "odds/place/";
+const ODDS_QUINELLA_ENDPOINT = "odds/quinella/";
+const ODDS_WIDE_ENDPOINT = "odds/wide/";
 
 type ApiOdds = {
   crawled_at: string,
@@ -33,12 +35,38 @@ export const getPlaceOdds = async (raceId: string): Promise<any[]> => {
   }
 };
 
+export const getQuinellaOdds = async (raceId: string, horseNumber: number): Promise<any[]> => {
+  const quinellaOdds = await get<ApiOdds[]>(getQuinellaOddsUrl(raceId, horseNumber));
+  if (quinellaOdds.success) {
+    return convertToGoogleChart(quinellaOdds.result);
+  } else {
+    return [];
+  }
+};
+
+export const getWideOdds = async (raceId: string, horseNumber: number): Promise<any[]> => {
+  const wideOdds = await get<ApiOdds[]>(getWideOddsUrl(raceId, horseNumber));
+  if (wideOdds.success) {
+    return convertToGoogleChart(wideOdds.result);
+  } else {
+    return [];
+  }
+};
+
 const getWinOddsUrl = (raceId: string) => {
   return `${API_PATH}/${raceId}/${ODDS_WIN_ENDPOINT}`;
 };
 
 const getPlaceOddsUrl = (raceId: string) => {
   return `${API_PATH}/${raceId}/${ODDS_PLACE_ENDPOINT}`;
+};
+
+const getQuinellaOddsUrl = (raceId: string, horseNumber: number) => {
+  return `${API_PATH}/${raceId}/${ODDS_QUINELLA_ENDPOINT}${horseNumber}`;
+};
+
+const getWideOddsUrl = (raceId: string, horseNumber: number) => {
+  return `${API_PATH}/${raceId}/${ODDS_WIDE_ENDPOINT}${horseNumber}`;
 };
 
 const convertToGoogleChart = (data: ApiOdds[]): any[] => {
