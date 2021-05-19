@@ -50,3 +50,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'timers'
+gem 'kaminari'
+gem 'kaminari-bootstrap'
+

@@ -1,7 +1,9 @@
-
-
 <% @races.each do |race| %>
   <div>
-    <%= link_to race.name, race_path(race) %>
+    <%= link_to "#{race.hold_at} #{race.number}R #{race.name}", race_path(race) %>
   </div>
 <% end %>
+
+<div class="mt-3">
+  <%= paginate @races %>
+</div>

@@ -2,7 +2,7 @@
 
 class RacesController < ApplicationController
   def index
-    @races = Race.all
+    @races = Race.all.order(hold_at: :desc).order(:number).page(params[:page])
   end
 
   def show
