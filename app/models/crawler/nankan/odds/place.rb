@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Nankan::Odds::Place
+class Crawler::Nankan::Odds::Place
   def initialize(race_card_id:, odds_min:, odds_max:, crawled_at:)
     @race_card_id = race_card_id
     @odds_min = odds_min
@@ -11,8 +11,8 @@ class Nankan::Odds::Place
   end
 
   def save!
-    Place.create!(
-      race_card_id: @race_card_id,
+    Nankan::Place.create!(
+      nankan_race_card_id: @race_card_id,
       odds_min: @odds_min,
       odds_max: @odds_max,
       crawled_at: @crawled_at
@@ -20,10 +20,10 @@ class Nankan::Odds::Place
   end
 
   def self.parse(document, race_id, crawled_at)
-    race_card_hash = RaceCard.where(race_id: race_id).group_by(&:horse_number)
+    race_card_hash = Nankan::RaceCard.where(nankan_race_id: race_id).group_by(&:horse_number)
     document.css('table[summary=単勝・複勝] td:nth-child(5)').map(&:text).map { |text| text.chop.strip }.map.with_index(1) do |odds, horse_number|
       odds = odds.split('-').map(&:strip).map(&:to_f)
-      Nankan::Odds::Place.new(
+      Crawler::Nankan::Odds::Place.new(
         race_card_id: race_card_hash[horse_number].first.id,
         odds_min: odds.first,
         odds_max: odds.last,

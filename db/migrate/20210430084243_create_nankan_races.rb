@@ -1,6 +1,6 @@
-class CreateRaces < ActiveRecord::Migration[6.0]
+class CreateNankanRaces < ActiveRecord::Migration[6.0]
   def change
-    create_table :races, id: false do |t|
+    create_table :nankan_races, id: false do |t|
       t.column :id, 'bigint PRIMARY KEY', comment: 'レースID (例: 2021043020020501)'
       t.string :name, null: false, comment: '名前'
       t.integer :number, null: false, comment: '第何レースか'

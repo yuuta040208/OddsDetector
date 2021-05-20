@@ -2,9 +2,9 @@
 
 require 'timers'
 
-class Nankan::Runner
+class Crawler::Nankan::Runner
   def initialize
-    Nankan::Crawler.daily
+    Crawler::Nankan::Crawler.daily
   end
 
   def execute
@@ -22,8 +22,8 @@ class Nankan::Runner
 
   def crawl
     puts Time.current + 9.hours
-    Nankan::Crawler.publish
-    Nankan::Crawler.subscribe
+    Crawler::Nankan::Crawler.publish
+    Crawler::Nankan::Crawler.subscribe
   end
 end
 

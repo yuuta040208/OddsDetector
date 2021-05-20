@@ -2,19 +2,19 @@
 
 class Api::V1::RacesController < Api::ApplicationController
   def index
-    @races = Race.where(hold_at: Date.today)
+    @races = Nankan::Race.where(hold_at: Date.today)
   end
 
   def show
-    @race = Race.find(params[:id])
+    @race = Nankan::Race.find(params[:id])
   end
 
   def horses
-    @race_cards = Race.find(params[:id]).race_cards.preload(:horse)
+    @race_cards = Nankan::Race.find(params[:id]).race_cards.preload(:horse)
   end
 
   def odds_win
-    @data = Win.eager_load(race_card: :horse).where(race_cards: { race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, wins|
+    @data = Nankan::Win.eager_load(race_card: :horse).where(nankan_race_cards: { nankan_race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, wins|
       hash = { crawled_at: crawled_at }
       hash[:horses] = wins.map do |win|
         { number: win.race_card.horse_number, name: win.race_card.horse_name, odds: win.odds }
@@ -24,7 +24,7 @@ class Api::V1::RacesController < Api::ApplicationController
   end
 
   def odds_place
-    @data = Place.eager_load(race_card: :horse).where(race_cards: { race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, places|
+    @data = Nankan::Place.eager_load(race_card: :horse).where(nankan_race_cards: { nankan_race_id: params[:id] }).order(crawled_at: :desc).order(:horse_number).group_by(&:crawled_at).map do |crawled_at, places|
       hash = { crawled_at: crawled_at }
       hash[:horses] = places.map do |place|
         { number: place.race_card.horse_number, name: place.race_card.horse_name, odds: place.odds }
@@ -35,9 +35,9 @@ class Api::V1::RacesController < Api::ApplicationController
 
   def odds_quinella
     horse_number = params[:horse_number].to_i
-    relation = Quinella.eager_load(race_card: :horse, second_race_card: :horse)
-    @data = relation.where(race_cards: { race_id: params[:id] })
-              .merge(relation.where(race_cards: { horse_number: horse_number }).or(relation.where(second_race_cards_quinellas: { horse_number: horse_number })))
+    relation = Nankan::Quinella.eager_load(race_card: :horse, second_race_card: :horse)
+    @data = relation.where(nankan_race_cards: { nankan_race_id: params[:id] })
+              .merge(relation.where(nankan_race_cards: { horse_number: horse_number }).or(relation.where(second_race_cards_nankan_quinellas: { horse_number: horse_number })))
               .order(crawled_at: :desc)
               .group_by(&:crawled_at)
               .map do |crawled_at, quinellas|
@@ -53,9 +53,9 @@ class Api::V1::RacesController < Api::ApplicationController
 
   def odds_wide
     horse_number = params[:horse_number].to_i
-    relation = Wide.eager_load(race_card: :horse, second_race_card: :horse)
-    @data = relation.where(race_cards: { race_id: params[:id] })
-              .merge(relation.where(race_cards: { horse_number: horse_number }).or(relation.where(second_race_cards_wides: { horse_number: horse_number })))
+    relation = Nankan::Wide.eager_load(race_card: :horse, second_race_card: :horse)
+    @data = relation.where(nankan_race_cards: { nankan_race_id: params[:id] })
+              .merge(relation.where(nankan_race_cards: { horse_number: horse_number }).or(relation.where(second_race_cards_nankan_wides: { horse_number: horse_number })))
               .order(crawled_at: :desc)
               .group_by(&:crawled_at)
               .map do |crawled_at, wides|

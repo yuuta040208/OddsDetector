@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Nankan::TargetUrl
+class Crawler::Nankan::TargetUrl
   attr_reader :race_id
 
   module Endpoint

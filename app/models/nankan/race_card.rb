@@ -1,27 +1,13 @@
 # frozen_string_literal: true
 
-class Nankan::RaceCard
-  def initialize(race_id:, horse_id:, bracket_number:, horse_number:)
-    @race_id = race_id
-    @horse_id = horse_id
-    @bracket_number = bracket_number
-    @horse_number = horse_number
+class Nankan::RaceCard < ApplicationRecord
+  belongs_to :race, foreign_key: :nankan_race_id
+  belongs_to :horse, foreign_key: :nankan_horse_id
+  has_many :wins, class_name: 'Nankan::Win', foreign_key: :nankan_race_card_id
+  has_many :places, class_name: 'Nankan::Place', foreign_key: :nankan_race_card_id
+  has_many :quinellas, class_name: 'Nankan::Quinella', foreign_key: :first_nankan_race_card_id
+  has_many :wides, class_name: 'Nankan::Wide', foreign_key: :first_nankan_race_card_id
+  has_many :scraping_targets, class_name: 'Nankan::ScrapingTarget', foreign_key: :nankan_race_card_id
 
-    freeze
-  end
-
-  def save!
-    RaceCard.find_or_create_by!(race_id: @race_id, horse_id: @horse_id, bracket_number: @bracket_number, horse_number: @horse_number)
-  end
-
-  def self.parse(document, race_id)
-    document.css('#contents950 > div.twoColEq_L > table tr').map { |tr| tr.css('td').map(&:text).map(&:strip) }.select(&:present?).map do |texts|
-      Nankan::RaceCard.new(
-        race_id: race_id,
-        horse_id: Horse.find_by(name: texts.third).id,
-        bracket_number: texts.first,
-        horse_number: texts.second
-      )
-    end
-  end
+  delegate :name, to: :horse, prefix: true
 end

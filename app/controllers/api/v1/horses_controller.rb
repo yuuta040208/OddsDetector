@@ -2,6 +2,6 @@
 
 class Api::V1::HorsesController < Api::ApplicationController
   def show
-    @horse = Horse.find(params[:id])
+    @horse = Nankan::Horse.find(params[:id])
   end
 end
