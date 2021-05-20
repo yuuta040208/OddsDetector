@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Nankan::Odds::Wide
+  TABLE_COLUMN_SIZE = 8
+
   def initialize(first_race_card_id:, second_race_card_id:, odds_min:, odds_max:, crawled_at:)
     @first_race_card_id = first_race_card_id
     @second_race_card_id = second_race_card_id
@@ -22,19 +24,43 @@ class Nankan::Odds::Wide
   end
 
   def self.parse(document, race_id, crawled_at)
-    race_cards = RaceCard.where(race_id: race_id)
-    document.css('table[name=wideTB] td').map(&:text).each_slice(2).map do |combination, odds|
-      next if combination.exclude?('-')
+    wides = []
+    reversed_odds_list = []
+    horse_count = Race.find(race_id).horses.size
+    race_card_hash = RaceCard.where(race_id: race_id).group_by(&:horse_number)
 
-      first_horse_number, second_horse_number = combination.split('-').map(&:to_i)
-      odds_min, odds_max = odds.split('-').map(&:strip).map(&:to_f)
-      Nankan::Odds::Wide.new(
-        first_race_card_id: race_cards.find_by(horse_number: first_horse_number).id,
-        second_race_card_id: race_cards.find_by(horse_number: second_horse_number).id,
-        odds_min: odds_min,
-        odds_max: odds_max,
-        crawled_at: crawled_at
-      )
-    end.compact
+    odds_list = document.css('table[summary=odds]')[1].css('tr').map { |tr| tr.css('td.al-right').map(&:text) }.select(&:present?)
+    odds_list.each.with_index(1) do |array, i|
+      reversed_odds = []
+      array.each.with_index do |odds, j|
+        if i + j + 1 > horse_count
+          reversed_odds << odds
+          next
+        end
+
+        wides << Nankan::Odds::Quinella.new(
+          first_race_card_id: race_card_hash[j + 1].first.id,
+          second_race_card_id: race_card_hash[i + j + 1].first.id,
+          odds: odds.to_f,
+          crawled_at: crawled_at
+        )
+      end
+
+      reversed_odds_list << reversed_odds
+    end
+
+
+    reversed_odds_list.select(&:present?).map(&:reverse).each.with_index do |array, i|
+      array.each_with_index do |odds, j|
+        wides << Nankan::Odds::Quinella.new(
+          first_race_card_id: race_card_hash[j + TABLE_COLUMN_SIZE + 1].first.id,
+          second_race_card_id: race_card_hash[i + TABLE_COLUMN_SIZE + 2].first.id,
+          odds: odds.to_f,
+          crawled_at: crawled_at
+        )
+      end
+    end
+
+    wides
   end
 end

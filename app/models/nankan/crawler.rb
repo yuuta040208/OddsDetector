@@ -4,14 +4,17 @@ require 'open-uri'
 
 class Nankan::Crawler
   HOST = 'https://www.nankankeiba.com/'
+  SLEEP_DURATION = 3
 
   class << self
     def daily(date = nil)
       date = date || Date.today
       top_page_document = Nokogiri::HTML(open(HOST))
 
-      delayed_each(Nankan::TopPage.create_target_urls(top_page_document, date)) do |target_url|
-        url = File.join(HOST, target_url.odds)
+      Nankan::TopPage.create_target_urls(top_page_document, date).each_with_index do |target_url, i|
+        sleep(SLEEP_DURATION) if i.positive?
+
+        url = File.join(HOST, target_url.odds_single)
         document = Nokogiri::HTML(open(url))
 
         race = Nankan::Race.parse(document, url, date).save!
@@ -20,30 +23,45 @@ class Nankan::Crawler
       end
     end
 
-    def publish
-      Nankan::Publisher.new.execute
+    def publish(crawled_at = nil)
+      Nankan::Publisher.new(crawled_at).execute
     end
 
-    def subscribe
+    def single
       crawled_at = Time.current
-      delayed_each(Nankan::Subscriber.new.execute) do |scraping_target|
+      Nankan::Subscriber.single do |scraping_target, i|
+        sleep(SLEEP_DURATION) if i.positive?
+
         url = File.join(HOST, scraping_target.url)
         document = Nokogiri::HTML(open(url))
-        race_card = scraping_target.race_card
+        race = scraping_target.race
 
-        Nankan::Odds::Win.parse(document, race_card.id, crawled_at).save!
-        Nankan::Odds::Place.parse(document, race_card.id, crawled_at).save!
-        Nankan::Odds::Quinella.parse(document, race_card.race_id, crawled_at).each(&:save!)
-        Nankan::Odds::Wide.parse(document, race_card.race_id, crawled_at).each(&:save!)
+        Win.transaction do
+          Nankan::Odds::Win.parse(document, race.id, crawled_at).each(&:save!)
+        end
+
+        Place.transaction do
+          Nankan::Odds::Place.parse(document, race.id, crawled_at).each(&:save!)
+        end
       end
     end
 
-    private
+    def quinella
+      crawled_at = Time.current
+      Nankan::Subscriber.quinella do |scraping_target, i|
+        sleep(SLEEP_DURATION) if i.positive?
 
-    def delayed_each(enumerable, duration = 3)
-      enumerable.each_with_index do |target, i|
-        sleep(duration) if i.positive?
-        yield(target)
+        url = File.join(HOST, scraping_target.url)
+        document = Nokogiri::HTML(open(url))
+        race = scraping_target.race
+
+        Quinella.transaction do
+          Nankan::Odds::Quinella.parse(document, race.id, crawled_at).each(&:save!)
+        end
+
+        Wide.transaction do
+          Nankan::Odds::Wide.parse(document, race.id, crawled_at).each(&:save!)
+        end
       end
     end
   end

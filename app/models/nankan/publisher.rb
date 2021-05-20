@@ -8,10 +8,10 @@ class Nankan::Publisher
   end
 
   def execute
-    target_races.map { |race| Nankan::TargetUrl.new(race_id: race.id) }.each do |target_url|
-      RaceCard.where(race_id: target_url.race_id).each do |race_card|
-        ScrapingTarget.create!(race_card_id: race_card.id, url: target_url.search(race_card.horse_number))
-      end
+    target_races.each do |race|
+      target_url = Nankan::TargetUrl.new(race_id: race.id)
+      ScrapingTarget.create!(race_id: race.id, url: target_url.odds_single)
+      ScrapingTarget.create!(race_id: race.id, url: target_url.odds_quinella)
     end
   end
 

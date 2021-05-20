@@ -61,11 +61,11 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
   end
 
   create_table "scraping_targets", force: :cascade do |t|
-    t.bigint "race_card_id"
+    t.bigint "race_id"
+    t.integer "race_card_id"
     t.string "url", null: false, comment: "スクレイピング対象のURL"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["race_card_id"], name: "index_scraping_targets_on_race_card_id"
   end
 
   create_table "wides", force: :cascade do |t|
@@ -90,7 +90,6 @@ ActiveRecord::Schema.define(version: 2021_05_04_093340) do
   add_foreign_key "quinellas", "race_cards", column: "second_race_card_id"
   add_foreign_key "race_cards", "horses"
   add_foreign_key "race_cards", "races"
-  add_foreign_key "scraping_targets", "race_cards"
   add_foreign_key "wides", "race_cards", column: "first_race_card_id"
   add_foreign_key "wides", "race_cards", column: "second_race_card_id"
   add_foreign_key "wins", "race_cards"
