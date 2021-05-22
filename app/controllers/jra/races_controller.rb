@@ -2,7 +2,7 @@
 
 class JRA::RacesController < ApplicationController
   def index
-    @races = JRA::Race.all.order(hold_at: :desc).order(:number).page(params[:page])
+    @date_races = JRA::DateRace.all
   end
 
   def show

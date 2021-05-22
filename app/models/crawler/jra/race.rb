@@ -27,7 +27,7 @@ class Crawler::JRA::Race
       course: document.css('div.RaceData01').text.split('/').last.strip,
       hold_at: date,
       start_at: Time.parse(document.css('div.RaceData01').text.split('/').first.strip),
-      description: trim(document.css('div.RaceData02').text.strip.gsub("\n", ''))
+      description: document.css('div.RaceData02').text.split("\n").select(&:present?)[0..2].join
     )
   end
 end
