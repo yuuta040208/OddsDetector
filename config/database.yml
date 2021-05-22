@@ -7,17 +7,17 @@ default: &default
 
 development:
   <<: *default
-  database: nankan_odds_detector_development
+  database: odds_detector_development
   host: 0.0.0.0
   port: 54320
 
 test:
   <<: *default
-  database: nankan_odds_detector_test
+  database: odds_detector_test
   host: 0.0.0.0
   port: 54320
 
 production:
   <<: *default
-  database: nankan_odds_detector_production
+  database: odds_detector_production
   host: <%= ENV.fetch('DATABASE_URL', '127.0.0.1') %>
