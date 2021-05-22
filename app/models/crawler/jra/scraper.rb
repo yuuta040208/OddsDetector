@@ -51,5 +51,41 @@ class Crawler::JRA::Scraper
     ensure
       Capybara.current_session.driver.quit
     end
+
+    def quinella
+      crawled_at = Time.current
+      session = Crawler::JRA::Session.new
+      Crawler::JRA::Subscriber.quinella do |scraping_target, i|
+        sleep(SLEEP_DURATION) if i.positive?
+
+        session.visit(File.join(HOST, scraping_target.url))
+        document = Nokogiri::HTML(session.html)
+        race = scraping_target.race
+
+        ActiveRecord::Base.transaction do
+          Crawler::JRA::Odds::Quinella.parse(document, race.id, crawled_at).each(&:save!)
+        end
+      end
+    ensure
+      Capybara.current_session.driver.quit
+    end
+
+    def wide
+      crawled_at = Time.current
+      session = Crawler::JRA::Session.new
+      Crawler::JRA::Subscriber.wide do |scraping_target, i|
+        sleep(SLEEP_DURATION) if i.positive?
+
+        session.visit(File.join(HOST, scraping_target.url))
+        document = Nokogiri::HTML(session.html)
+        race = scraping_target.race
+
+        ActiveRecord::Base.transaction do
+          Crawler::JRA::Odds::Wide.parse(document, race.id, crawled_at).each(&:save!)
+        end
+      end
+    ensure
+      Capybara.current_session.driver.quit
+    end
   end
 end

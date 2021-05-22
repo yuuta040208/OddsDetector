@@ -11,7 +11,8 @@ class Crawler::JRA::Publisher
     target_races.each do |race|
       target_url = Crawler::JRA::TargetUrl.new(race_id: race.id)
       JRA::ScrapingTarget.create!(jra_race_id: race.id, url: target_url.odds_single)
-      # JRA::ScrapingTarget.create!(jra_race_id: race.id, url: target_url.odds_quinella)
+      JRA::ScrapingTarget.create!(jra_race_id: race.id, url: target_url.odds_quinella)
+      JRA::ScrapingTarget.create!(jra_race_id: race.id, url: target_url.odds_wide)
     end
   end
 
