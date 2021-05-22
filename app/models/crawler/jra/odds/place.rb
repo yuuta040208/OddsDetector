@@ -21,14 +21,11 @@ class Crawler::JRA::Odds::Place
 
   def self.parse(document, race_id, crawled_at)
     race_card_hash = JRA::RaceCard.where(jra_race_id: race_id).group_by(&:horse_number)
-    odds_mins = document.css('table.tanTables td:nth-child(5)').map(&:text).map(&:to_f)
-    odds_maxes = document.css('table.tanTables td:nth-child(7)').map(&:text).map(&:to_f)
-
-    odds_mins.map.with_index(1) do |odds_min, horse_number|
+    document.css('div#odds_fuku_block td.Odds.Popular').map.with_index(1) do |td, horse_number|
       Crawler::JRA::Odds::Place.new(
         race_card_id: race_card_hash[horse_number].first.id,
-        odds_min: odds_min,
-        odds_max: odds_maxes[horse_number - 1],
+        odds_min: td.text.split(' - ').first.to_f,
+        odds_max: td.text.split(' - ').last.to_f,
         crawled_at: crawled_at
       )
     end

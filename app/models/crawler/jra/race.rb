@@ -22,12 +22,12 @@ class Crawler::JRA::Race
   def self.parse(document, race_id, date)
     new(
       id: race_id,
-      name: document.css('h1.raceTitle').text.strip,
-      number: document.css('div.icoRacedata').text.to_i,
-      course: document.css('ul.classCourseSyokin li:nth-child(2)').text.split(/[[:space:]]/).first,
+      name: document.css('div.RaceName').text.strip,
+      number: document.css('span.RaceNum').text.to_i,
+      course: document.css('div.RaceData01').text.split('/').last.strip,
       hold_at: date,
-      start_at: Time.parse(document.css('ul.classCourseSyokin li:nth-child(2)').text.split(/[[:space:]]/).last),
-      description: document.css('p[itemprop=about]').text.gsub("\n", ' ')
+      start_at: Time.parse(document.css('div.RaceData01').text.split('/').first.strip),
+      description: trim(document.css('div.RaceData02').text.strip.gsub("\n", ''))
     )
   end
 end

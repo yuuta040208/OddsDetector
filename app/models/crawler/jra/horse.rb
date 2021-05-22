@@ -13,7 +13,7 @@ class Crawler::JRA::Horse
   end
 
   def self.parse(document)
-    document.css('a.tategaki.bamei').map do |element|
+    document.css('span.HorseName > a').map do |element|
       Crawler::JRA::Horse.new(
         id: element.attributes['href'].value.split('/').last.to_i,
         name: element.text

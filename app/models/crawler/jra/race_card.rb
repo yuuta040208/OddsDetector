@@ -15,16 +15,12 @@ class Crawler::JRA::RaceCard
   end
 
   def self.parse(document, race_id)
-    bracket_numbers = document.css('tr.wakuban:nth-child(1) td').map(&:text).select(&:present?).reverse.map(&:to_i)
-    horse_names = document.css('a.tategaki.bamei').map(&:text).reverse
-
-    bracket_numbers.map.with_index(1) do |bracket_number, horse_number|
-      horse_id = JRA::Horse.find_by!(name: horse_names[horse_number]).id
+    document.css('tr.HorseList').map do |tr|
       Crawler::JRA::RaceCard.new(
         race_id: race_id,
-        horse_id: horse_id,
-        bracket_number: bracket_number,
-        horse_number: horse_number
+        horse_id: JRA::Horse.find_by!(name: tr.css('td:nth-child(4)').text.strip).id,
+        bracket_number: tr.css('td:nth-child(1)').text.to_i,
+        horse_number: tr.css('td:nth-child(2)').text.to_i
       )
     end
   end

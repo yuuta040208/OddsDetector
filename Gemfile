@@ -52,4 +52,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'timers'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
-
+gem 'capybara', '>= 2.15'

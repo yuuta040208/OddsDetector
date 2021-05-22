@@ -3,19 +3,21 @@
 require 'open-uri'
 
 class Crawler::JRA::Scraper
-  HOST = 'https://www.keibalab.jp/'
+  HOST = 'https://race.netkeiba.com/'
   SLEEP_DURATION = 3
 
   class << self
     def daily(date = nil)
       date = date || Date.today
-      top_page_document = Nokogiri::HTML(open(File.join(HOST, Crawler::JRA::TargetUrl::RACE_PATH, date.strftime('%Y%m%d'))))
+      session = Crawler::JRA::Session.new
+      session.visit(File.join(HOST, 'top/race_list.html'))
+      top_page_document = Nokogiri::HTML(session.html)
 
       Crawler::JRA::TopPage.create_target_urls(top_page_document).each_with_index do |target_url, i|
         sleep(SLEEP_DURATION) if i.positive?
 
-        url = File.join(HOST, target_url.index)
-        document = Nokogiri::HTML(open(url))
+        session.visit(File.join(HOST, target_url.race))
+        document = Nokogiri::HTML(session.html)
 
         ActiveRecord::Base.transaction do
           Crawler::JRA::Race.parse(document, target_url.race_id, date).save!
@@ -23,6 +25,8 @@ class Crawler::JRA::Scraper
           Crawler::JRA::RaceCard.parse(document, target_url.race_id).each(&:save!)
         end
       end
+    ensure
+      Capybara.current_session.driver.quit
     end
 
     def publish(crawled_at = nil)
@@ -31,11 +35,12 @@ class Crawler::JRA::Scraper
 
     def single
       crawled_at = Time.current
+      session = Crawler::JRA::Session.new
       Crawler::JRA::Subscriber.single do |scraping_target, i|
         sleep(SLEEP_DURATION) if i.positive?
 
-        url = File.join(HOST, scraping_target.url)
-        document = Nokogiri::HTML(open(url))
+        session.visit(File.join(HOST, scraping_target.url))
+        document = Nokogiri::HTML(session.html)
         race = scraping_target.race
 
         ActiveRecord::Base.transaction do
@@ -43,6 +48,8 @@ class Crawler::JRA::Scraper
           Crawler::JRA::Odds::Place.parse(document, race.id, crawled_at).each(&:save!)
         end
       end
+    ensure
+      Capybara.current_session.driver.quit
     end
   end
 end
