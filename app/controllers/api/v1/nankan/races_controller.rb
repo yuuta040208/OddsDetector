@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::RacesController < Api::ApplicationController
+class Api::V1::Nankan::RacesController < Api::ApplicationController
   def index
     @races = Nankan::Race.where(hold_at: Date.today)
   end

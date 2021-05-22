@@ -1,9 +1,2 @@
-<% @races.each do |race| %>
-  <div>
-    <%= link_to "#{race.hold_at} #{race.number}R #{race.name}", race_path(race) %>
-  </div>
-<% end %>
-
-<div class="mt-3">
-  <%= paginate @races %>
-</div>
+<p><%= link_to 'JRA', jra_races_path %></p>
+<p><%= link_to '南関競馬', nankan_races_path %></p>

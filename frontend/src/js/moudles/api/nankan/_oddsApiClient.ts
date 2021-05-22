@@ -1,6 +1,6 @@
-import {get} from "./_apiClient";
+import {get} from "../_apiClient";
 
-const API_PATH = "/api/v1/races";
+const API_PATH = "/api/v1/nankan/races";
 const ODDS_WIN_ENDPOINT = "odds/win/";
 const ODDS_PLACE_ENDPOINT = "odds/place/";
 const ODDS_QUINELLA_ENDPOINT = "odds/quinella/";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Chart } from "react-google-charts";
-import { getWinOdds, getPlaceOdds, getQuinellaOdds, getWideOdds } from "../api/_oddsApiClient";
-import { getHorses, Horse } from "../api/_horsesApiClient";
+import { getWinOdds, getPlaceOdds, getQuinellaOdds, getWideOdds } from "../../api/nankan/_oddsApiClient";
+import { getHorses, Horse } from "../../api/nankan/_horsesApiClient";
 
 const options = {
   chartArea: {

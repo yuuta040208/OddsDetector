@@ -1,6 +1,6 @@
-import { get } from "./_apiClient";
+import { get } from "../_apiClient";
 
-const API_PATH = "/api/v1/races";
+const API_PATH = "/api/v1/jra/races";
 const HORSES_ENDPOINT = "horses/";
 
 export type Horse = {
