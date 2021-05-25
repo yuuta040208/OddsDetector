@@ -8,14 +8,14 @@ default: &default
 development:
   <<: *default
   database: odds_detector_development
-  host: 0.0.0.0
-  port: 54320
+  host: <%= ENV.fetch('DATABASE_HOST', '0.0.0.0') %>
+  port: <%= ENV.fetch('DATABASE_PORT', '54320') %>
 
 test:
   <<: *default
   database: odds_detector_test
-  host: 0.0.0.0
-  port: 54320
+  host: <%= ENV.fetch('DATABASE_HOST', '0.0.0.0') %>
+  port: <%= ENV.fetch('DATABASE_PORT', '54320') %>
 
 production:
   <<: *default
