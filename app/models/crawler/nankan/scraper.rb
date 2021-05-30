@@ -27,16 +27,19 @@ class Crawler::Nankan::Scraper
 
     def publish(crawled_at = nil)
       Crawler::Nankan::Publisher.new(crawled_at).execute
+      Crawler::Nankan::Publisher.new(crawled_at).official
     end
 
     def single
-      crawled_at = Time.current
       Crawler::Nankan::Subscriber.single do |scraping_target, i|
         sleep(SLEEP_DURATION) if i.positive?
 
         url = File.join(HOST, scraping_target.url)
         document = Nokogiri::HTML(open(url))
         race = scraping_target.race
+
+        now = Time.current
+        crawled_at = race.start_at < now ? race.start_at : now
 
         ActiveRecord::Base.transaction do
           Crawler::Nankan::Odds::Win.parse(document, race.id, crawled_at).each(&:save!)
@@ -46,13 +49,15 @@ class Crawler::Nankan::Scraper
     end
 
     def quinella
-      crawled_at = Time.current
       Crawler::Nankan::Subscriber.quinella do |scraping_target, i|
         sleep(SLEEP_DURATION) if i.positive?
 
         url = File.join(HOST, scraping_target.url)
         document = Nokogiri::HTML(open(url))
         race = scraping_target.race
+
+        now = Time.current
+        crawled_at = race.start_at < now ? race.start_at : now
 
         ActiveRecord::Base.transaction do
           Crawler::Nankan::Odds::Quinella.parse(document, race.id, crawled_at).each(&:save!)

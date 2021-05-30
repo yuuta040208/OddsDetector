@@ -15,9 +15,26 @@ class Crawler::Nankan::Publisher
     end
   end
 
+  def official
+    unofficial_single_races.each do |race|
+      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'single')
+    end
+    unofficial_quinella_races.each do |race|
+      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
+    end
+  end
+
   private
 
   def target_races
     Nankan::Race.where('hold_at = ? AND start_at > ?', @now.strftime('%Y-%m-%d'), @now).order(:start_at)
+  end
+
+  def unofficial_single_races
+    JRA::Race.where(hold_at: @now.strftime('%Y-%m-%d')).select(&:unofficial_by_win?)
+  end
+
+  def unofficial_quinella_races
+    JRA::Race.where(hold_at: @now.strftime('%Y-%m-%d')).select(&:unofficial_by_quinella?)
   end
 end
