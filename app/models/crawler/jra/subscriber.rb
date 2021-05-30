@@ -2,23 +2,32 @@
 
 class Crawler::JRA::Subscriber
   def self.single
-    JRA::ScrapingTarget.all.distinct.select(&:odds_single?).each.with_index do |scraping_target, i|
-      yield(scraping_target, i)
-      scraping_target.destroy!
+    JRA::ScrapingTarget.eager_load(:race).distinct.where(path: 'single').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
+      scraping_targets.each do |scraping_target|
+        yield(description, scraping_target)
+
+        scraping_target.destroy!
+      end
     end
   end
 
   def self.quinella
-    JRA::ScrapingTarget.all.distinct.select(&:odds_quinella?).each.with_index do |scraping_target, i|
-      yield(scraping_target, i)
-      scraping_target.destroy!
+    JRA::ScrapingTarget.eager_load(:race).distinct.where(path: 'quinella').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
+      scraping_targets.each do |scraping_target|
+        yield(description, scraping_target)
+
+        scraping_target.destroy!
+      end
     end
   end
 
   def self.wide
-    JRA::ScrapingTarget.all.distinct.select(&:odds_wide?).each.with_index do |scraping_target, i|
-      yield(scraping_target, i)
-      scraping_target.destroy!
+    JRA::ScrapingTarget.eager_load(:race).distinct.where(path: 'wide').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
+      scraping_targets.each do |scraping_target|
+        yield(description, scraping_target)
+
+        scraping_target.destroy!
+      end
     end
   end
 end

@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_161923) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "jra_horses", id: :bigint, default: nil, force: :cascade do |t|
+  create_table "jra_horses", force: :cascade do |t|
     t.string "name", null: false, comment: "名前"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_161923) do
     t.index ["jra_race_id"], name: "index_jra_race_cards_on_jra_race_id"
   end
 
-  create_table "jra_races", id: :bigint, default: nil, force: :cascade do |t|
+  create_table "jra_races", force: :cascade do |t|
     t.string "name", null: false, comment: "名前"
     t.integer "number", null: false, comment: "第何レースか"
     t.string "course", null: false, comment: "コース情報"
@@ -62,10 +62,10 @@ ActiveRecord::Schema.define(version: 2021_05_21_161923) do
 
   create_table "jra_scraping_targets", force: :cascade do |t|
     t.bigint "jra_race_id"
-    t.integer "jra_race_card_id"
-    t.string "url", null: false, comment: "スクレイピング対象のURL"
+    t.string "path", null: false, comment: "スクレイピング対象のパス"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["jra_race_id"], name: "index_jra_scraping_targets_on_jra_race_id"
   end
 
   create_table "jra_wides", force: :cascade do |t|
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_161923) do
   add_foreign_key "jra_quinellas", "jra_race_cards", column: "second_jra_race_card_id"
   add_foreign_key "jra_race_cards", "jra_horses"
   add_foreign_key "jra_race_cards", "jra_races"
+  add_foreign_key "jra_scraping_targets", "jra_races"
   add_foreign_key "jra_wides", "jra_race_cards", column: "first_jra_race_card_id"
   add_foreign_key "jra_wides", "jra_race_cards", column: "second_jra_race_card_id"
   add_foreign_key "jra_wins", "jra_race_cards"

@@ -15,13 +15,17 @@ class Crawler::JRA::RaceCard
   end
 
   def self.parse(document, race_id)
-    document.css('tr.HorseList').map do |tr|
+    bracket_number = 1
+    document.css('table.basic.narrow-xy.tanpuku tr').map.with_index do |tr, horse_number|
+      next if horse_number.zero?
+
+      bracket_number = tr.css('td.waku > img').first.attributes['alt'].value.delete('^0-9').to_i if tr.css('td.waku').present?
       Crawler::JRA::RaceCard.new(
         race_id: race_id,
-        horse_id: JRA::Horse.find_by!(name: tr.css('td:nth-child(4)').text.strip).id,
-        bracket_number: tr.css('td:nth-child(1)').text.to_i,
-        horse_number: tr.css('td:nth-child(2)').text.to_i
+        horse_id: JRA::Horse.find_by!(name: tr.css('td.horse > a').text).id,
+        bracket_number: bracket_number,
+        horse_number: horse_number
       )
-    end
+    end.compact
   end
 end

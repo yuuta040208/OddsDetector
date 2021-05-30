@@ -3,26 +3,22 @@
 require 'open-uri'
 
 class Crawler::JRA::Scraper
-  HOST = 'https://race.netkeiba.com/'
+  HOST = 'https://jra.jp/'
+
   SLEEP_DURATION = 3
 
   class << self
     def daily(date = nil)
       date = date || Date.today
       session = Crawler::JRA::Session.new
-      session.visit(File.join(HOST, 'top/race_list.html'))
-      top_page_document = Nokogiri::HTML(session.html)
 
-      Crawler::JRA::TopPage.create_target_urls(top_page_document).each_with_index do |target_url, i|
-        sleep(SLEEP_DURATION) if i.positive?
-
-        session.visit(File.join(HOST, target_url.race))
-        document = Nokogiri::HTML(session.html)
+      Crawler::JRA::Scenario.daily(session, HOST, date) do |document|
+        sleep(SLEEP_DURATION)
 
         ActiveRecord::Base.transaction do
-          Crawler::JRA::Race.parse(document, target_url.race_id, date).save!
+          race = Crawler::JRA::Race.parse(document, date).save!
           Crawler::JRA::Horse.parse(document).each(&:save!)
-          Crawler::JRA::RaceCard.parse(document, target_url.race_id).each(&:save!)
+          Crawler::JRA::RaceCard.parse(document, race.id).each(&:save!)
         end
       end
     ensure
@@ -31,21 +27,22 @@ class Crawler::JRA::Scraper
 
     def publish(crawled_at = nil)
       Crawler::JRA::Publisher.new(crawled_at).execute
+      Crawler::JRA::Publisher.new(crawled_at).official
     end
 
     def single
-      crawled_at = Time.current
       session = Crawler::JRA::Session.new
-      Crawler::JRA::Subscriber.single do |scraping_target, i|
-        sleep(SLEEP_DURATION) if i.positive?
 
-        session.visit(File.join(HOST, scraping_target.url))
-        document = Nokogiri::HTML(session.html)
-        race = scraping_target.race
+      Crawler::JRA::Scenario.single(session, HOST) do |document, race_id|
+        sleep(SLEEP_DURATION)
+
+        now = Time.current
+        start_at = JRA::Race.find(race_id).start_at
+        crawled_at = start_at < now ? start_at : now
 
         ActiveRecord::Base.transaction do
-          Crawler::JRA::Odds::Win.parse(document, race.id, crawled_at).each(&:save!)
-          Crawler::JRA::Odds::Place.parse(document, race.id, crawled_at).each(&:save!)
+          Crawler::JRA::Odds::Win.parse(document, race_id, crawled_at).each(&:save!)
+          Crawler::JRA::Odds::Place.parse(document, race_id, crawled_at).each(&:save!)
         end
       end
     ensure
@@ -53,17 +50,17 @@ class Crawler::JRA::Scraper
     end
 
     def quinella
-      crawled_at = Time.current
       session = Crawler::JRA::Session.new
-      Crawler::JRA::Subscriber.quinella do |scraping_target, i|
-        sleep(SLEEP_DURATION) if i.positive?
 
-        session.visit(File.join(HOST, scraping_target.url))
-        document = Nokogiri::HTML(session.html)
-        race = scraping_target.race
+      Crawler::JRA::Scenario.quinella(session, HOST) do |document, race_id|
+        sleep(SLEEP_DURATION)
+
+        now = Time.current
+        start_at = JRA::Race.find(race_id).start_at
+        crawled_at = start_at < now ? start_at : now
 
         ActiveRecord::Base.transaction do
-          Crawler::JRA::Odds::Quinella.parse(document, race.id, crawled_at).each(&:save!)
+          Crawler::JRA::Odds::Quinella.parse(document, race_id, crawled_at).each(&:save!)
         end
       end
     ensure
@@ -71,17 +68,17 @@ class Crawler::JRA::Scraper
     end
 
     def wide
-      crawled_at = Time.current
       session = Crawler::JRA::Session.new
-      Crawler::JRA::Subscriber.wide do |scraping_target, i|
-        sleep(SLEEP_DURATION) if i.positive?
 
-        session.visit(File.join(HOST, scraping_target.url))
-        document = Nokogiri::HTML(session.html)
-        race = scraping_target.race
+      Crawler::JRA::Scenario.wide(session, HOST) do |document, race_id|
+        sleep(SLEEP_DURATION)
+
+        now = Time.current
+        start_at = JRA::Race.find(race_id).start_at
+        crawled_at = start_at < now ? start_at : now
 
         ActiveRecord::Base.transaction do
-          Crawler::JRA::Odds::Wide.parse(document, race.id, crawled_at).each(&:save!)
+          Crawler::JRA::Odds::Wide.parse(document, race_id, crawled_at).each(&:save!)
         end
       end
     ensure

@@ -3,8 +3,7 @@
 class Crawler::JRA::Race
   extend Trimmable
 
-  def initialize(id:, name:, number:, course:, hold_at:, start_at:, description:)
-    @id = id
+  def initialize(name:, number:, course:, hold_at:, start_at:, description:)
     @name = name
     @number = number
     @course = course
@@ -16,18 +15,17 @@ class Crawler::JRA::Race
   end
 
   def save!
-    JRA::Race.find_or_create_by!(id: @id, name: @name, number: @number, course: @course, hold_at: @hold_at, start_at: @start_at, description: @description)
+    JRA::Race.find_or_create_by!(name: @name, number: @number, course: @course, hold_at: @hold_at, start_at: @start_at, description: @description)
   end
 
-  def self.parse(document, race_id, date)
+  def self.parse(document, date)
     new(
-      id: race_id,
-      name: document.css('div.RaceName').text.strip,
-      number: document.css('span.RaceNum').text.to_i,
-      course: document.css('div.RaceData01').text.split('/').last.strip,
+      name: document.css('span.race_name').text,
+      number: document.css('div.race_number > img').first.attributes['alt'].value.to_i,
+      course: document.css('div.cell.course').text.strip,
       hold_at: date,
-      start_at: Time.parse(document.css('div.RaceData01').text.split('/').first.strip),
-      description: document.css('div.RaceData02').text.split("\n").select(&:present?)[0..2].join
+      start_at: Time.parse("#{date.to_s} #{document.css('div.date_line > div.inner > div.cell.time > strong').text.gsub('時', ':').gsub('分', '')}"),
+      description: document.css('div.cell.date').text.split(' ').last
     )
   end
 end

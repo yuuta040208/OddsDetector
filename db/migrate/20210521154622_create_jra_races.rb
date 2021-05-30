@@ -1,7 +1,6 @@
 class CreateJRARaces < ActiveRecord::Migration[6.0]
   def change
-    create_table :jra_races, id: false do |t|
-      t.column :id, 'bigint PRIMARY KEY', comment: 'レースID (例: 202105220501)'
+    create_table :jra_races do |t|
       t.string :name, null: false, comment: '名前'
       t.integer :number, null: false, comment: '第何レースか'
       t.string :course, null: false, comment: 'コース情報'
