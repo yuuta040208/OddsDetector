@@ -12,6 +12,28 @@ Rails.application.routes.draw do
   end
 
   namespace :api, format: :json do
+    namespace :external do
+      namespace :v1 do
+        namespace :jra do
+          scope :odds do
+            get '/win', to: 'odds#win'
+            get '/place', to: 'odds#place'
+            get '/quinella', to: 'odds#quinella'
+            get '/wide', to: 'odds#wide'
+          end
+        end
+
+        namespace :nankan do
+          scope :odds do
+            get '/win', to: 'odds#win'
+            get '/place', to: 'odds#place'
+            get '/quinella', to: 'odds#quinella'
+            get '/wide', to: 'odds#wide'
+          end
+        end
+      end
+    end
+
     namespace :v1 do
       namespace :nankan do
         resources :races, only: [:index, :show] do
