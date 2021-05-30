@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class Api::V1::Nankan::HorsesController < Api::ApplicationController
+class Api::V1::JRA::HorsesController < Api::ApplicationController
   def show
-    @horse = Nankan::Horse.find(params[:id])
+    @horse = JRA::Horse.find(params[:id])
   end
 end
