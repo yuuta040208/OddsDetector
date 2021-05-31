@@ -26,7 +26,7 @@ class Crawler::Nankan::Race
       number: document.css('#race-data01-b > p.bl-left.mR5.pT3 > img').first.attributes['alt'].value.to_i,
       course: document.css('#race-data01-a > a').text.strip,
       hold_at: date,
-      start_at: Time.parse(document.css('#race-data01-a > strong').text),
+      start_at: Time.parse("#{document.css('#race-data01-a > strong').text} +0900"),
       description: document.css('#race-data01-a > span.tx-mid.tx-bold.tx-gray01').text.strip.gsub("\t", '')
     )
   end

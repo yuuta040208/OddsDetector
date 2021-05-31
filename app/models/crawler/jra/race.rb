@@ -24,7 +24,7 @@ class Crawler::JRA::Race
       number: document.css('div.race_number > img').first.attributes['alt'].value.to_i,
       course: document.css('div.cell.course').text.strip,
       hold_at: date,
-      start_at: Time.parse("#{date.to_s} #{document.css('div.date_line > div.inner > div.cell.time > strong').text.gsub('時', ':').gsub('分', '')}"),
+      start_at: Time.parse("#{date.to_s} #{document.css('div.date_line > div.inner > div.cell.time > strong').text.gsub('時', ':').gsub('分', '')} +0900"),
       description: document.css('div.cell.date').text.split(' ').last
     )
   end

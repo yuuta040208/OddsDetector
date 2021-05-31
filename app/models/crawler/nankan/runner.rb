@@ -3,8 +3,8 @@
 require 'timers'
 
 class Crawler::Nankan::Runner
-  def initialize
-    Crawler::Nankan::Scraper.daily
+  def initialize(initialization = true)
+    Crawler::Nankan::Scraper.daily if initialization
   end
 
   def execute
@@ -23,7 +23,8 @@ class Crawler::Nankan::Runner
   def crawl
     puts Time.current + 9.hours
     Crawler::Nankan::Scraper.publish
-    Crawler::Nankan::Scraper.subscribe
+    Crawler::Nankan::Scraper.single
+    Crawler::Nankan::Scraper.quinella
   end
 end
 
