@@ -20,12 +20,12 @@ glob.sync("**/*.{ts,tsx,js,scss}", {
   key = key.match(reg)[1];
   entries[key] = path.resolve(srcDir, key);
 });
-entries['images'] = glob.sync('./src/images/**/*.*');
+entries['images'] = glob.sync('./frontend/src/images/**/*.*');
 
 module.exports = {
   entry: entries,
   output: {
-    path: path.resolve(__dirname, '../public/bundles'),
+    path: path.resolve(__dirname, './public/bundles'),
     filename: '[name]-[hash].js'
   },
   resolve: {
@@ -88,7 +88,7 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               sassOptions: {
-                includePaths: ['./node_modules']
+                includePaths: ['./frontend/node_modules']
               }
             }
           },
@@ -102,7 +102,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              context: './src/images',
+              context: './frontend/src/images',
               name: '[path][name]-[hash].[ext]',
               outputPath: 'images',
               publicPath: module.parent.exports.AppNamePath + '/bundles/images/'
@@ -117,7 +117,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              context: './src/fonts',
+              context: './frontend/src/fonts',
               name: '[path][name]-[hash].[ext]',
               outputPath: 'fonts',
               publicPath: module.parent.exports.AppNamePath + '/bundles/fonts/'
