@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "build:dev": "webpack --progress --mode=development",
-    "build": "webpack --config webpack.dev.js"
+    "build": "webpack --config webpack.dev.js",
+    "start": ""
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",
