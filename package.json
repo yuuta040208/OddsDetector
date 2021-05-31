@@ -1,6 +1,9 @@
 {
   "name": "nankan_odds_detector",
   "private": true,
+  "engines": {
+    "yarn": "1.x"
+  },
   "scripts": {
     "build:dev": "webpack --progress --mode=development",
     "build": "webpack --config webpack.dev.js",
