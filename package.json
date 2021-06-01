@@ -7,7 +7,7 @@
   "scripts": {
     "build:dev": "webpack --progress --mode=development",
     "build": "webpack --config webpack.dev.js",
-    "start": ""
+    "heroku-postbuild": "cd frontend && yarn build"
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",

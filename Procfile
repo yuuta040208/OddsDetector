@@ -1,1 +1,1 @@
-web: cd frontend && yarn install && yarn build
+web: bundle exec rails server -p $PORT
