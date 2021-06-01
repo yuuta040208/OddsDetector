@@ -2,7 +2,7 @@
 
 class Nankan::RacesController < ApplicationController
   def index
-    @date_races = Nankan::DateRace.all
+    @date_races = Kaminari.paginate_array(Nankan::DateRace.all).page(params[:page]).per(1)
   end
 
   def show

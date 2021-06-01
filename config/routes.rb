@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'races#index'
+  root 'top#index'
 
   resources :races, only: [:index]
 

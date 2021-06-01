@@ -1,5 +1,12 @@
 <%= javascript_bundle_tag 'js/entrypoints/jra/raceDetail' %>
 
-<h1><%= @race.name %></h1>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800"><%= @race.number %>R <%= @race.name %></h1>
+</div>
+
+<h2 class="h4 text-gray-800">
+  <%= @race.hold_at.strftime('%Y/%m/%d') %><span class="ms-3"><%= @race.description %></span>
+</h2>
+<h3 class="h5 text-gray-800"> 発走時刻 <%= (@race.start_at + 9.hours).strftime('%H:%M') %></h3>
 
 <div id="main-container"></div>

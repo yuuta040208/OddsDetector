@@ -10,8 +10,16 @@
   </head>
 
   <body>
-    <div class="m-4">
-      <%= yield %>
+    <div id="wrapper">
+      <%= render 'shared/sidebar' %>
+
+      <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content" class="mt-4">
+          <div class="container-fluid">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>

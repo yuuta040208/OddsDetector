@@ -2,7 +2,7 @@
 
 class JRA::RacesController < ApplicationController
   def index
-    @date_races = JRA::DateRace.all
+    @date_races = Kaminari.paginate_array(JRA::DateRace.all).page(params[:page]).per(1)
   end
 
   def show
