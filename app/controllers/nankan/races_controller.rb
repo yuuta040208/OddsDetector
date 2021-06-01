@@ -2,7 +2,7 @@
 
 class Nankan::RacesController < ApplicationController
   def index
-    @races = Nankan::Race.all.order(hold_at: :desc).order(:number).page(params[:page])
+    @date_races = Nankan::DateRace.all
   end
 
   def show
