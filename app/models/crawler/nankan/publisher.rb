@@ -17,10 +17,10 @@ class Crawler::Nankan::Publisher
 
   def official
     unofficial_single_races.each do |race|
-      Nankan::ScrapingTarget.create!(jra_race_id: race.id, path: 'single')
+      Nankan::ScrapingTarget.create!(nankan_race_id: race.id, path: 'single')
     end
     unofficial_quinella_races.each do |race|
-      Nankan::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
+      Nankan::ScrapingTarget.create!(nankan_race_id: race.id, path: 'quinella')
     end
   end
 
