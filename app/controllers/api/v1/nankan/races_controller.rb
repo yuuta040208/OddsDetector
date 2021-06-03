@@ -18,7 +18,7 @@ class Api::V1::Nankan::RacesController < Api::ApplicationController
       hash = { crawled_at: crawled_at }
       hash[:horses] = wins.map do |win|
         { number: win.race_card.horse_number, name: win.race_card.horse_name, odds: win.odds }
-      end
+      end.uniq { |win| win[:number] }
       hash
     end
   end
@@ -28,7 +28,7 @@ class Api::V1::Nankan::RacesController < Api::ApplicationController
       hash = { crawled_at: crawled_at }
       hash[:horses] = places.map do |place|
         { number: place.race_card.horse_number, name: place.race_card.horse_name, odds: place.odds }
-      end
+      end.uniq { |place| place[:number] }
       hash
     end
   end

@@ -5,7 +5,7 @@ class JRA::Race < ApplicationRecord
   has_many :horses, through: :race_cards
 
   def unofficial_by_win?
-    latest = race_cards.eager_load(:wins).map(&:wins).flatten.max_by(&:crawled_at)
+    latest = race_cards.eager_load(:official_win).map(&:wins).flatten.max_by(&:crawled_at)
     return false if latest.blank?
 
     start_at > latest.crawled_at
