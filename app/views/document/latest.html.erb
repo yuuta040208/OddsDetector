@@ -1,0 +1,185 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">最新オッズ取得API</h1>
+</div>
+
+<h2 class="h4 text-gray-800">JRA 最新単勝オッズ取得</h2>
+
+<p><span class="rounded bg-success text-white p-1">GET</span> /api/external/v1/jra/odds/win/</p>
+
+<table class="table text-start">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><code>Authorization</code></td>
+    <td><strong>Header</strong></td>
+    <td>トークン</td>
+  </tr>
+  <tr>
+    <td><code>description</code></td>
+    <td><strong>Query</strong></td>
+    <td>レース情報（例: 3回中京8日）</td>
+  </tr>
+  <tr>
+    <td><code>number</code></td>
+    <td><strong>Query</strong></td>
+    <td>レース数（例: 11）</td>
+  </tr>
+  </tbody>
+</table>
+
+<kbd>curl -X GET 'http://localhost:3000/api/external/v1/jra/odds/win?description=3回中京8日&number=11'</kbd>
+
+<pre class="border mt-1"><code>
+  {
+    "data": [
+      {
+        "umaban": 1,
+        "odds": 110.2
+      },
+      {
+        "umaban": 2,
+        "odds": 87
+      },
+      {
+        "umaban": 3,
+        "odds": 13.7
+      },
+      {
+        "umaban": 4,
+        "odds": 6.5
+      },
+      {
+        "umaban": 5,
+        "odds": 1.9
+      },
+      {
+        "umaban": 6,
+        "odds": 17.5
+      },
+      {
+        "umaban": 7,
+        "odds": 45.2
+      },
+      {
+        "umaban": 8,
+        "odds": 255
+      },
+      {
+        "umaban": 9,
+        "odds": 8.1
+      },
+      {
+        "umaban": 10,
+        "odds": 4
+      },
+      {
+        "umaban": 11,
+        "odds": 78.5
+      },
+      {
+        "umaban": 12,
+        "odds": 71.3
+      }
+    ],
+    "datetime": "2021-06-01 02:45:00"
+  }
+
+</code></pre>
+
+<hr class="mt-5 mb-5">
+
+<h2 class="h4 text-gray-800">南関競馬 最新単勝オッズ取得</h2>
+
+<p><span class="rounded bg-success text-white p-1">GET</span> /api/external/v1/nankan/odds/win/</p>
+
+<table class="table text-start">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><code>Authorization</code></td>
+    <td><strong>Header</strong></td>
+    <td>トークン</td>
+  </tr>
+  <tr>
+    <td><code>description</code></td>
+    <td><strong>Query</strong></td>
+    <td>レース情報（例: 第3回　浦和競馬　第1日）</td>
+  </tr>
+  <tr>
+    <td><code>number</code></td>
+    <td><strong>Query</strong></td>
+    <td>レース数（例: 11）</td>
+  </tr>
+  </tbody>
+</table>
+
+<kbd>curl -X GET 'http://localhost:3000/api/external/v1/nankan/odds/win?description=第3回　浦和競馬　第1日&number=11'</kbd>
+
+<pre class="border mt-1"><code>
+  {
+    "data": [
+      {
+        "umaban": 1,
+        "odds": 110.2
+      },
+      {
+        "umaban": 2,
+        "odds": 87
+      },
+      {
+        "umaban": 3,
+        "odds": 13.7
+      },
+      {
+        "umaban": 4,
+        "odds": 6.5
+      },
+      {
+        "umaban": 5,
+        "odds": 1.9
+      },
+      {
+        "umaban": 6,
+        "odds": 17.5
+      },
+      {
+        "umaban": 7,
+        "odds": 45.2
+      },
+      {
+        "umaban": 8,
+        "odds": 255
+      },
+      {
+        "umaban": 9,
+        "odds": 8.1
+      },
+      {
+        "umaban": 10,
+        "odds": 4
+      },
+      {
+        "umaban": 11,
+        "odds": 78.5
+      },
+      {
+        "umaban": 12,
+        "odds": 71.3
+      }
+    ],
+    "datetime": "2021-06-01 02:45:00"
+  }
+
+</code></pre>

@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     resources :races, only: [:index, :show]
   end
 
+  scope :document, as: :document do
+    get '/latest', to: 'document#latest'
+  end
+
   namespace :api, format: :json do
     namespace :external do
       namespace :v1 do
