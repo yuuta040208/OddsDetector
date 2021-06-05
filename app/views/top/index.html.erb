@@ -1,6 +1,8 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+  <h1 class="h3 mb-0 text-gray-800">OddsDetector</h1>
 </div>
+
+<h2 class="h6 mb-5 text-gray-800">中央競馬、地方競馬のオッズを独自の方法で収集し無料で公開しています。</h2>
 
 <div class="row">
   <div class="col-xl-3 col-md-6 mb-4">
@@ -8,10 +10,10 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+            <div class="font-weight-bold text-primary text-uppercase mb-1">
               JRA掲載レース数
             </div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= 12345.to_s(:delimited) %></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= @jra_race_count.to_s(:delimited) %></div>
           </div>
           <div class="col-auto">
             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -26,10 +28,10 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+            <div class="font-weight-bold text-success text-uppercase mb-1">
               南関競馬掲載レース数
             </div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= 3456.to_s(:delimited) %></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= @nankan_race_count.to_s(:delimited) %></div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -44,7 +46,7 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+            <div class="font-weight-bold text-warning text-uppercase mb-1">
               高知競馬掲載レース数
             </div>
             <div class="h5 mb-0 font-weight-bold text-gray-800"><%= 0.to_s(:delimited) %></div>
@@ -62,7 +64,7 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            <div class="font-weight-bold text-danger text-uppercase mb-1">
               ホッカイドウ競馬掲載レース数
             </div>
             <div class="h5 mb-0 font-weight-bold text-gray-800"><%= 0.to_s(:delimited) %></div>
@@ -82,10 +84,10 @@
     <h6 class="m-0 font-weight-bold">直近レースのオッズ推移</h6>
   </div>
   <div class="card-body">
-    <p><%= Nankan::Race.last.name %></p>
+    <p><%= @latest_race.description %> <%= @latest_race.name %>（<%= (@latest_race.start_at + 9.hours).strftime('%Y/%m/%d %H:%M') %>発走）</p>
     <div class="chart-area">
-      <%= javascript_bundle_tag 'js/entrypoints/nankan/topPage' %>
-      <div id="main-container" data-id="<%= Nankan::Race.last.id %>"></div>
+      <%= javascript_bundle_tag @react_endpoint %>
+      <div id="main-container" data-id="<%= @latest_race.id %>"></div>
     </div>
   </div>
 </div>
