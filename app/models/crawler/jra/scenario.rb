@@ -80,7 +80,7 @@ class Crawler::JRA::Scenario
     def quinella(session, url)
       session.visit(url)
       # オッズ 開催選択ページ
-      session.find(:xpath, '/html/body/div/div[6]/div/ul/li[3]/a').click
+      session.find(:xpath, '/html/body/div/div[5]/div/ul/li[3]/a').click
 
       description = ''
       Crawler::JRA::Subscriber.quinella do |_description, scraping_target|

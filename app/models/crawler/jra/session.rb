@@ -16,10 +16,21 @@ class Crawler::JRA::Session
 
   def initialize
     Capybara.register_driver :chrome do |app|
+      url = ENV.fetch('SELENIUM_DRIVER_URL')
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument('window-size=1280,960')
+      caps = ::Selenium::WebDriver::Remote::Capabilities.chrome(
+        'goog:chromeOptions' => {
+          'args' => [
+            'no-sandbox',
+            'headless',
+            'disable-gpu',
+            'window-size=1280,960'
+          ]
+        }
+      )
 
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+      Capybara::Selenium::Driver.new(app, url: url, browser: :remote, desired_capabilities: caps)
     end
 
     Capybara::Session.new(:chrome)
