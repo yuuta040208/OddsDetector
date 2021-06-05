@@ -24,8 +24,8 @@ class Crawler::JRA::Runner
     puts Time.current + 9.hours
     Crawler::JRA::Scraper.publish
     Crawler::JRA::Scraper.single
-    Crawler::JRA::Scraper.quinella
-    Crawler::JRA::Scraper.wide
+    # Crawler::JRA::Scraper.quinella
+    # Crawler::JRA::Scraper.wide
   end
 end
 
