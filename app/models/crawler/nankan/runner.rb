@@ -3,6 +3,8 @@
 require 'timers'
 
 class Crawler::Nankan::Runner
+  class ScrapingTargetNotExistError < StandardError; end
+
   def initialize(initialization = true)
     Crawler::Nankan::Scraper.daily if initialization
   end
@@ -21,10 +23,14 @@ class Crawler::Nankan::Runner
   private
 
   def crawl
-    puts Time.current + 9.hours
     Crawler::Nankan::Scraper.publish
-    Crawler::Nankan::Scraper.single
-    Crawler::Nankan::Scraper.quinella
+
+    if Nankan::ScrapingTarget.all.count > 0
+      Crawler::Nankan::Scraper.single
+      # Crawler::Nankan::Scraper.quinella
+    else
+      raise ScrapingTargetNotExistError
+    end
   end
 end
 
