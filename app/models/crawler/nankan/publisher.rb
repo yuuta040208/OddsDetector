@@ -11,7 +11,7 @@ class Crawler::Nankan::Publisher
     target_races.each do |race|
       target_url = Crawler::Nankan::TargetUrl.new(race_id: race.id)
       Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_single)
-      Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_quinella)
+      # Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_quinella)
     end
   end
 
@@ -20,10 +20,10 @@ class Crawler::Nankan::Publisher
       target_url = Crawler::Nankan::TargetUrl.new(race_id: race.id)
       Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_single)
     end
-    unofficial_quinella_races.each do |race|
-      target_url = Crawler::Nankan::TargetUrl.new(race_id: race.id)
-      Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_quinella)
-    end
+    # unofficial_quinella_races.each do |race|
+    #   target_url = Crawler::Nankan::TargetUrl.new(race_id: race.id)
+    #   Nankan::ScrapingTarget.create!(nankan_race_id: race.id, url: target_url.odds_quinella)
+    # end
   end
 
   private

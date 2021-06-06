@@ -10,8 +10,8 @@ class Crawler::JRA::Publisher
   def execute
     target_races.each do |race|
       JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'single')
-      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
-      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'wide')
+      # JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
+      # JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'wide')
     end
   end
 
@@ -19,12 +19,12 @@ class Crawler::JRA::Publisher
     unofficial_single_races.each do |race|
       JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'single')
     end
-    unofficial_quinella_races.each do |race|
-      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
-    end
-    unofficial_wide_races.each do |race|
-      JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'wide')
-    end
+    # unofficial_quinella_races.each do |race|
+    #   JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'quinella')
+    # end
+    # unofficial_wide_races.each do |race|
+    #   JRA::ScrapingTarget.create!(jra_race_id: race.id, path: 'wide')
+    # end
   end
 
   private
