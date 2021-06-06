@@ -56,3 +56,8 @@ gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'capybara', '>= 2.15'
 gem 'selenium-webdriver'
+gem 'crono'
+gem 'daemons'
+gem 'haml'
+gem 'sinatra', require: nil
+
