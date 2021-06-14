@@ -8,6 +8,8 @@ class NankanJob < ActiveJob::Base
   rescue OpenURI::HTTPError => e
     p e
     sleep(60 * 30)
-    Rake::Task['crawler:nankan'].invoke
+    NankanJob.perform_now
+  rescue ScrapingTargetNotExistError
+    # finish
   end
 end
