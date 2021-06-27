@@ -5,8 +5,8 @@ Rails.app_class.load_tasks
 class NankanJob < ActiveJob::Base
   def perform
     Rake::Task['crawler:nankan'].invoke
-  rescue ScrapingTargetNotExistError
-    # finish
+  rescue Crawler::Nankan::Runner::ScrapingTargetNotExistError
+    p 'finish'
   rescue StandardError => e
     p e
     sleep(60 * 30)
