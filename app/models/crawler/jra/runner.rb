@@ -43,6 +43,7 @@ class Crawler::JRA::Runner
     # ブロックを定期実行する
     def periodically(second = 60 * 5)
       timers = Timers::Group.new
+      yield
       timers.every(second) do
         yield
       end

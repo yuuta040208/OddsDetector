@@ -77,5 +77,5 @@ Rails.application.routes.draw do
     get '*path', controller: :application, action: :not_found
   end
 
-  mount Crono::Web, at: '/crono'
+  # mount Crono::Web, at: '/crono'
 end
