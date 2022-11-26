@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 namespace :crawler do
-  desc 'JRAのオッズ情報をクローリング'
-  task :jra => :environment do
-    Crawler::JRA::Runner.new.execute
-  end
+  namespace :jra do
+    desc 'JRAのレース情報を定期的に publish する'
+    task :publish => :environment do
+      Crawler::JRA::Runner.publish
+    end
 
-  desc '南関競馬のオッズ情報をクローリング'
-  task :nankan => :environment do
-    Crawler::Nankan::Runner.new.execute
+    desc 'JRAのレース情報を定期的に subscribe する'
+    task :subscribe => :environment do
+      Crawler::JRA::Runner.subscribe
+    end
   end
 end

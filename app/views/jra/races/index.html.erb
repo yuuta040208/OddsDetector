@@ -2,17 +2,34 @@
   <h1 class="h3 mb-0 text-gray-800">JRAのレース一覧</h1>
 </div>
 
+<hr class="divider">
 
 <% @date_races.each do |date_race| %>
-  <h2 class="h4 text-gray-800"><%= date_race.date.strftime('%Y/%m/%d') %></h2>
+  <h2 class="h4 text-gray-800"><%= date_race.date.strftime('%Y/%m/%d') %> (<%= t('date.day_names')[date_race.date.wday] %>)</h2>
 
   <div class="row">
     <% date_race.places.each do |place| %>
-      <div class="col-sm-2 mt-2">
-        <p class="text-gray-800 font-weight-bold"><%= place %></p>
-        <% date_race.races[place].each do |race| %>
-          <p><%= link_to "#{race.number}R #{race.name}", jra_race_path(race) %></p>
-        <% end %>
+      <div class="col-sm-4 mt-2">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col"><%= place %></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% date_race.races[place].each do |race| %>
+            <tr class="d-flex">
+              <td class="col-2 pt-2 pb-2">
+                <span class="badge bg-secondary p-2"><%= race.number %>R</span>
+              </td>
+              <td class="col-10 pt-2 pb-2">
+                <%= link_to "#{race.name}", jra_race_path(race) %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
       </div>
     <% end %>
   </div>

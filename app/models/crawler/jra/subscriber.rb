@@ -1,33 +1,23 @@
 # frozen_string_literal: true
 
 class Crawler::JRA::Subscriber
-  def self.single
-    JRA::ScrapingTarget.eager_load(:race).where(path: 'single').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
-      scraping_targets.uniq(&:jra_race_id).each do |scraping_target|
-        yield(description, scraping_target)
+  def execute
+    # スクレイピング対象が1件もpublishされていない場合は早期リターンしてOK
+    return if JRA::ScrapingTarget.count == 0
 
-        JRA::ScrapingTarget.where(jra_race_id: scraping_target.jra_race_id, path: scraping_target.path).each(&:destroy!)
-      end
+    # DBをロックして ScrapingTarget を1つポップ、ポップしたらすぐにロックを解除する
+    JRA::ScrapingTarget.transaction do
+      @scraping_target = JRA::ScrapingTarget.eager_load(:race).order('jra_races.number').first
+      @scraping_target.destroy!
     end
-  end
 
-  def self.quinella
-    JRA::ScrapingTarget.eager_load(:race).where(path: 'quinella').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
-      scraping_targets.uniq(&:jra_race_id).each do |scraping_target|
-        yield(description, scraping_target)
-
-        JRA::ScrapingTarget.where(jra_race_id: scraping_target.jra_race_id, path: scraping_target.path).each(&:destroy!)
-      end
-    end
-  end
-
-  def self.wide
-    JRA::ScrapingTarget.eager_load(:race).where(path: 'wide').order('jra_races.number').group_by { |a| a.race.description }.each do |description, scraping_targets|
-      scraping_targets.uniq(&:jra_race_id).each do |scraping_target|
-        yield(description, scraping_target)
-
-        JRA::ScrapingTarget.where(jra_race_id: scraping_target.jra_race_id, path: scraping_target.path).each(&:destroy!)
-      end
+    begin
+      # スクレイピング対象をブロックに渡す
+      yield(@scraping_target)
+    rescue => e
+      # 例外が発生した場合はスクレイピング対象を新しいレコードとして元に戻す
+      @scraping_target.dup.save!
+      p e
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class JRA::Race < ApplicationRecord
-  has_many :race_cards, class_name: 'JRA::RaceCard', foreign_key: :jra_race_id
+  has_many :race_cards, class_name: 'JRA::RaceCard', foreign_key: :jra_race_id, dependent: :destroy
   has_many :horses, through: :race_cards
 
   def unofficial_by_win?
@@ -23,5 +23,9 @@ class JRA::Race < ApplicationRecord
     return false if latest.blank?
 
     start_at > latest.crawled_at
+  end
+
+  def self.exist_race_info?(date)
+    JRA::Race.where(hold_at: date).count > 0
   end
 end
